@@ -10,11 +10,15 @@ const TOKEN = "8701918863:AAEPTmID2U-Z2ZGj-pUthC0RH6__VdyYbYI";
 const CHAT_ID = "1879456094";
 
 app.post("/register", async (req, res) => {
-  const phone = req.body.phone;
-
-  const message = `📱 رقم جديد:\n${phone}`;
-
   try {
+    const phone = req.body.phone;
+
+    if (!phone) {
+      return res.json({ message: "رقم غير صحيح ❌" });
+    }
+
+    const message = `📱 رقم جديد:\n${phone}`;
+
     await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: "POST",
       headers: {
@@ -29,11 +33,13 @@ app.post("/register", async (req, res) => {
     res.json({ message: "تم التسجيل بنجاح ✅" });
 
   } catch (error) {
+    console.log(error);
     res.json({ message: "حصل خطأ ❌" });
   }
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log("Server running");
+  console.log("Server running on port " + PORT);
 });
