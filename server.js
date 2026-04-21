@@ -1,24 +1,25 @@
 const express = require("express");
 const cors = require("cors");
+const fetch = require("node-fetch");
 
 const app = express();
 
-app.use(cors());
+// مهم جدًا عشان CORS
+app.use(cors({
+  origin: "*"
+}));
+
 app.use(express.json());
 
+// 🔴 حط التوكن والايدي بتوعك هنا
 const TOKEN = "8701918863:AAEPTmID2U-Z2ZGj-pUthC0RH6__VdyYbYI";
 const CHAT_ID = "1879456094";
 
+// endpoint
 app.post("/register", async (req, res) => {
+  const { phone } = req.body;
+
   try {
-    const phone = req.body.phone;
-
-    if (!phone) {
-      return res.json({ message: "رقم غير صحيح ❌" });
-    }
-
-    const message = `📱 رقم جديد:\n${phone}`;
-
     await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
       method: "POST",
       headers: {
@@ -26,20 +27,22 @@ app.post("/register", async (req, res) => {
       },
       body: JSON.stringify({
         chat_id: CHAT_ID,
-        text: message
+        text: `📞 رقم جديد: ${phone}`
       })
     });
 
-    res.json({ message: "تم التسجيل بنجاح ✅" });
+    res.json({ message: "تم التسجيل بنجاح" });
 
-  } catch (error) {
-    console.log(error);
-    res.json({ message: "حصل خطأ ❌" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "error" });
   }
 });
 
-const PORT = process.env.PORT || 3000;
+app.get("/", (req, res) => {
+  res.send("Server شغال 🔥");
+});
 
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+app.listen(3000, () => {
+  console.log("Server شغال");
 });
