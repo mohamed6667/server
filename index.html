@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>كتب وملخصات قوانين ثانوية</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f5f6fa;
+  direction: rtl;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 15px;
+}
+
+.book {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.book:hover {
+  transform: scale(1.05);
+}
+
+.book img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.book h4 {
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.register-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #667eea;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">📚 كتب وملخصات قوانين ثانوية</div>
+
+<div class="container">
+
+  <div class="book">
+    <img src="phys.jpg">
+    <h4>ملخص قوانين الفيزياء</h4>
+  </div>
+
+  <div class="book">
+    <img src="chem.jpg">
+    <h4>قوانين الكيمياء</h4>
+  </div>
+
+  <div class="book">
+    <img src="احياء.jpg">
+    <h4>ملخص الأحياء</h4>
+  </div>
+
+  <div class="book">
+    <img src="math.jpg">
+    <h4>قوانين الرياضيات</h4>
+  </div>
+
+  <div class="book">
+    <img src="en.jpg">
+    <h4>ملخص اللغة الإنجليزية</h4>
+  </div>
+
+  <div class="book">
+    <img src="geo.jpg">
+    <h4>ملخص الجيولوجيا</h4>
+  </div>
+
+  <div class="book">
+    <img src="his.jpg">
+    <h4>ملخص التاريخ</h4>
+  </div>
+
+  <div class="book">
+    <img src="ge.jpg">
+    <h4>ملخص الجغرافيا</h4>
+  </div>
+
+  <div class="book">
+    <img src="ما_هو_منطق_الفلسفة.jpg">
+    <h4>ملخص الفلسفة والمنطق</h4>
+  </div>
+
+  <div class="book">
+    <img src="تفاضل.jpg">
+    <h4>قوانين التفاضل والتكامل</h4>
+  </div>
+
+  <div class="book">
+    <img src="static.png">
+    <h4>قوانين الاستاتيكا</h4>
+  </div>
+
+  <div class="book">
+    <img src="dynamic.jpg">
+    <h4>قوانين الديناميكا</h4>
+  </div>
+
+  <div class="book">
+    <img src="نحو.jpg">
+    <h4>ملخص النحو</h4>
+  </div>
+
+  <div class="book">
+    <img src="بلاغة.jpg">
+    <h4>ملخص البلاغة</h4>
+  </div>
+
+</div>
+
+<button class="register-btn" onclick="openModal()">إنشاء حساب</button>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3>إنشاء حساب</h3>
+
+    <input type="text" id="phone" placeholder="رقم الهاتف">
+
+    <button onclick="sendData()">تسجيل</button>
+    <p style="font-size:12px; color:gray;">
+بالتسجيل أنت توافق على إمكانية التواصل معك عبر رقم الهاتف
+    </p>
+
+    <button onclick="closeModal()">إغلاق</button>
+  </div>
+</div>
+
+<script>
+function openModal() {
+  document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+async function sendData() {
+  let phone = document.getElementById("phone").value;
+
+  if (phone.length < 10) {
+    alert("❌ رقم غير صحيح");
+    return;
+  }
+
+  try {
+    let res = await fetch("http://localhost:3000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ phone: phone })
+    });
+
+    let data = await res.json();
+
+    alert(data.message);
+
+  } catch (err) {
+    alert("❌ السيرفر مش شغال");
+  }
+}
+</script>
+
+</body>
+</html>
